@@ -33,8 +33,6 @@ class Scaling_Spliting_data:
     X_test, y_test = create_dataset(scaled_test['Apple Inc.'], time_step)
     X_val, y_val = create_dataset(scaled_val['Apple Inc.'], time_step)
 
-
-
     #reshaping the data to assing it to 1 feature array 
     X_train =X_train.reshape(X_train.shape[0],X_train.shape[1] , 1)
     X_test = X_test.reshape(X_test.shape[0],X_test.shape[1] , 1)

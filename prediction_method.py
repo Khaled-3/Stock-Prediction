@@ -1,12 +1,10 @@
 import numpy as np
-import os
-os.environ['TF_ENABLE_ONEDNN_OPTS'] = '1'
 from keras._tf_keras.keras.models import load_model
 from scaling_xy_spliting import Scaling_Spliting_data as sd
 model_path=r"Model.h5"
 model=load_model(model_path)
 class Prediction:
-    
+    #predict method 1 for future data 
     def predict_stock(data_set,scalers,days_to_predict=0):
         
         pred_data = {}
@@ -49,4 +47,19 @@ class Prediction:
             lst_output = scal[n].inverse_transform(np.array(lst_output).reshape(-1,1)).reshape(1,-1).tolist()
             pred_data[n] = lst_output
         return pred_data
-    final_pred=predict_stock(sd.scaled_test,sd.scaler_test,7)
+    final_pred=predict_stock(sd.scaled_test,sd.scaler_test,1)
+
+
+    #predict method 2 for all data from past to present
+    def predicted_unscale(data,scalers):
+        prediction_data = {}
+        y_data = {}
+        for n in data.keys():
+            test_data = data[n]
+            x_test,y_test = sd.create_dataset(test_data,15)
+            x_test = x_test.reshape(x_test.shape[0],x_test.shape[1] , 1)
+            predicted = model.predict(x_test,verbose =0)
+            prediction_data[n] = scalers[n].inverse_transform(predicted)
+            y_data[n] = scalers[n].inverse_transform(y_test.reshape(-1,1))
+        return prediction_data,y_data
+    present_pred,y_present = predicted_unscale(sd.scaled_test,sd.scaler_test)

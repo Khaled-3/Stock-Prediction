@@ -39,4 +39,13 @@ class Clean_spliting_data:
     
     train_data,test_data,val_data = train_test_split(final_data)
     
+    def date_all(data):
+        date_data = {}
+        for n in data.keys():
+            d = data[n]
+            data_reshaped = np.array(d['date'][-76:]).reshape(-1,1)
+            date_data[n] = data_reshaped
+        return date_data
+    all_date = date_all(final_data)
+    
 
